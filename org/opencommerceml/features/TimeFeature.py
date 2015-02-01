@@ -3,23 +3,25 @@ Created on Jan 5, 2015
 
 @author: nkumar2
 '''
-import sys, datetime
-
-from operator import itemgetter
+import sys
+from GetFeatures import getFeatures
 
 def main(argv=None):
-    with open('/Users/nkumar2/Datasets/yoochoose-clicks-buys.session.sorted.dat', 'r') as f:
+    with open('/Users/nkumar2/Datasets/yoochoose-dataset/yoochoose-clicks-buys.session.sorted.dat', 'r') as f:
         prevstrLineList = str(f.readline()).split(',')
     listoflists = []
     sessionNumber = 1
-    with open('/Users/nkumar2/Datasets/yoochoose-clicks-buys.session.sorted.dat', 'r') as f:
+    with open('/Users/nkumar2/Datasets/yoochoose-dataset/yoochoose-clicks-buys.session.sorted.dat', 'r') as f:
         for line in f:
             strLineList = str(line).split(',')
             if strLineList[0] == prevstrLineList[0]:
-                listoflists.append(strLineList) 
+                listoflists.append(strLineList)
             else:
-                (totalclickCount, totalClickTime, purchaseCount) = printClickTimeIntervals(listoflists)
-                print str(listoflists[0][0]) +","+ str(totalclickCount) +","+ str(totalClickTime) +","+ str(purchaseCount)
+                
+                '''(totalclickCount, totalClickTime, purchaseCount) = printClickTimeIntervals(listoflists)
+                print str(listoflists[0][0]) +","+ str(totalclickCount) +","+ str(totalClickTime) +","+ str(purchaseCount)'''
+                featureList = getFeatures(listoflists)
+                print featureList
                 del listoflists[:]
                 sessionNumber = sessionNumber + 1
                 if sessionNumber > 20:
@@ -36,6 +38,7 @@ def getTimeInSeconds(diffTime):
     curtotalSeconds = curtotalSeconds + float(tokens[2]) * 1.0
     return curtotalSeconds
 
+'''
 def printClickTimeIntervals (listoflists):
     haspurchased = 0
     clickCount = 0
@@ -59,8 +62,7 @@ def printClickTimeIntervals (listoflists):
             prevList = curList
      
     return (clickCount, totalTimeInSeconds, purchaseCount)
-
-'''       
+       
 def getItemSoldCountAndTimeDiff(listoflists):
     listoflists = sorted(listoflists, key=itemgetter(1))
     clickCount = 0
